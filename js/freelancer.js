@@ -29,9 +29,17 @@ $(function() {
 // Highlight the top nav as scrolling occurs
 $('body').scrollspy({
     target: '.navbar-fixed-top'
-})
+});
 
 // Closes the Responsive Menu on Menu Item Click
 $('.navbar-collapse ul li a').click(function() {
     $('.navbar-toggle:visible').click();
+});
+
+// Change profile image to black & white on mouseover
+$('img#profile').mouseover(
+  function() {
+  	$(this).attr("src", "img/profile-black_white.jpg");
+  }).mouseleave(function(){
+     $(this).attr("src", "img/profile-colour.jpg");
 });

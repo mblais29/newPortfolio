@@ -74,7 +74,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <img class="img-responsive" src="img/profile.png" alt="">
+                    <img id="profile" class="img-responsive" src="img/profile-colour.jpg" alt="">
                     <div class="intro-text">
                         <span class="name">Mitchel Blais</span>
                         <hr class="star-light">
@@ -96,13 +96,13 @@
             </div>
             <div class="row">
                 <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                    <a id="radius" href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
                         <div class="caption">
                             <div class="caption-content">
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="img/portfolio/cabin.png" class="img-responsive" alt="">
+                        <img src="img/portfolio/walton_radius_search.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -112,7 +112,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="img/portfolio/cake.png" class="img-responsive" alt="">
+                        <img src="img/portfolio/walton_routing.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -122,7 +122,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="img/portfolio/circus.png" class="img-responsive" alt="">
+                        <img src="img/portfolio/mapping_1.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -169,13 +169,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-lg-offset-2">
+                <div class="col-lg-8 col-lg-offset-2">
                     <p>Hello, I'm Mitchel Blais this is my personal website where I share all of my work. I have a background in GIS and had the opportunity to combine GIS with Web Application Systems. As such, my current projects are heavily influenced by spatial analysis and the web. With my current skill set and knowledge, I developed an Oil and Gas Spatial Application System outlining all the Oil and Gas wells that have been drilled throughout British Columbia and Saskatchewan, Canada. My Web Application can be viewed <a href="http://mblais-welldata.ca/wellKnown/" target="_blank" >here</a>. In addition, I have a <a href="https://github.com/mblais29" target="_blank">github</a> account showcasing my Front End Development Skills. </p>
                 </div>
-                <div class="col-lg-4">
-                    
-                </div>
-                
             </div>
         </div>
     </section>
@@ -226,7 +222,7 @@
                         <div id="success"></div>
                         <div class="row">
                             <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-success btn-lg">Send</button>
+                                <button type="submit" class="btn btn-lg">Send</button>
                             </div>
                         </div>
                     </form>
@@ -240,34 +236,34 @@
         <div class="footer-above">
             <div class="container">
                 <div class="row">
-                    <div class="footer-col col-md-4">
+                    <div class="footer-col col-md-6">
                         <h3>Location</h3>
-                        <p>3481 Melrose Place<br>Beverly Hills, CA 90210</p>
+                        <p>15 New Steine, Brighton, East Sussex, United Kingdom, BN2 1PB</p>
                     </div>
-                    <div class="footer-col col-md-4">
+                    <div class="footer-col col-md-6">
                         <h3>Around the Web</h3>
                         <ul class="list-inline">
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                                <a href="http://www.facebook.com/mitchel.blais" class="btn-social btn-outline" target="_blank"><i class="fa fa-fw fa-facebook"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
+                                <a href="http://plus.google.com/117487922166987726591/" class="btn-social btn-outline" target="_blank"><i class="fa fa-fw fa-google-plus"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
+                                <a href="https://twitter.com/MitchelBlais" class="btn-social btn-outline" target="_blank"><i class="fa fa-fw fa-twitter"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
+                                <a href="https://uk.linkedin.com/pub/mitchel-blais/52/621/6b0" class="btn-social btn-outline" target="_blank"><i class="fa fa-fw fa-linkedin"></i></a>
                             </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-dribbble"></i></a>
-                            </li>
+                            <!---<li>
+                                <a href="#" class="btn-social btn-outline" target="_blank"><i class="fa fa-fw fa-dribbble"></i></a>
+                            </li>--->
                         </ul>
                     </div>
-                    <div class="footer-col col-md-4">
+                    <!---<div class="footer-col col-md-4">
                         <h3>About Freelancer</h3>
                         <p>Freelance is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
-                    </div>
+                    </div>--->
                 </div>
             </div>
         </div>
@@ -302,21 +298,25 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Parcel Radius Search</h2>
                             <hr class="star-primary">
-                            <img src="img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <img id="walton_radius" src="img/portfolio/walton_radius_search.png" class="img-responsive img-centered" alt="">
+                            <p>Walton's Parcel Radius Search was developed to allow user's the ability to select all parcel's of land within a specified radius. Once the user has completed the radius a javascript function is triggered to capture the points latitude, longitude and distance from the point(radius) in miles. On success, an ajax request to <b><i>Geoserver</i></b> is made and returns an array of geojson data. The parcel geometry stored in the <b><i>PostgreSQL</i></b> database is rendered in the <b><i>Leaflet.js</i></b> framework creating a selection of multiple polygons (parcels of land) within the specified radius.</p>
                             <ul class="list-inline item-details">
                                 <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    <strong><a href="http://www.walton.com/" target="_blank">Walton</a>
                                     </strong>
                                 </li>
                                 <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    <strong><span>November 2014</span>
                                     </strong>
                                 </li>
                                 <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    <strong><span>Web Application Development</span>
+                                    </strong>
+                                </li>
+                                <li>Code:
+                                    <strong><a href="code/radius_selection.txt" target="_blank">Preview Code</a>
                                     </strong>
                                 </li>
                             </ul>
@@ -339,21 +339,25 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Routing</h2>
                             <hr class="star-primary">
-                            <img src="img/portfolio/cake.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <img src="img/portfolio/walton_routing.png" class="img-responsive img-centered map" alt="">
+                            <p>Walton's Routing option is an API developed for <b><i>Leaflet.js</i></b>. The API was installed into their Web Application and I created the javascript code to capture the user's current latitude/longitude as well as the destination(parcel) coordinates. When the user selects the desired parcel a function is called to retrieved the parcel's center coordinates. Both user's coordinates and the parcel destination coordinates are passed into another function thus generating the quickest route.</p>
                             <ul class="list-inline item-details">
                                 <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    <strong><a href="http://www.walton.com/" target="_blank">Walton</a>
                                     </strong>
                                 </li>
                                 <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    <strong><span>July 2014</span>
                                     </strong>
                                 </li>
                                 <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    <strong><span>Web Application Development</span>
+                                    </strong>
+                                </li>
+                                <li>Code:
+                                    <strong><a href="code/routing.txt" target="_blank">Preview Code</a>
                                     </strong>
                                 </li>
                             </ul>
@@ -376,21 +380,25 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Building Location Map</h2>
                             <hr class="star-primary">
-                            <img src="img/portfolio/circus.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <img src="img/portfolio/mapping_2.png" class="img-responsive img-centered map" alt="">
+                            <p>Enbridge building location map was created using Coldfusion to retreive the data from the database, Javascript to run the functions and <b><i>Leaflet.js</i></b> framework, HTML and CSS to create the structure and style of the map. Part of the project included displaying important building information. The map used blue pins to display all their building coordinates, users could zoom in and select a pin triggering a pop-up with important information about that building.</p>
                             <ul class="list-inline item-details">
                                 <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
+                                    <strong><a href="http://www.enbridge.com">Enbridge</a>
                                     </strong>
                                 </li>
                                 <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
+                                    <strong><span>March 2015</span>
                                     </strong>
                                 </li>
                                 <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
+                                    <strong><span>Web Application Development</span>
+                                    </strong>
+                                </li>
+                                <li>Code:
+                                    <strong><a href="code/map.txt" target="_blank">Preview Code</a>
                                     </strong>
                                 </li>
                             </ul>
