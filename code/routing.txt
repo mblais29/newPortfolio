@@ -1,0 +1,295 @@
+/* Global Variables */
+var myLat = 1;
+var myLong = 1;
+var tolat = 1;
+var tolon = 1;
+var temp = showMyLocation(); // make sure this runs once to grab the current Lat and Long for the user
+var route = null;
+
+/* Function to add the Offer Layer with the Routing feature in the layer pop-up */
+function addGeoJSONOffers() {
+
+	if (OffersInitAdd === true) {
+
+		$.getJSON(jsonurloffer + "&bbox=" + getBoundingBox(), function(data) {
+			//Break offers out into different GeoJSON objects based on status_id
+			var ownedOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var expiredOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var pendingOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var acceptedOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var escrowCancellationOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var exitedNonArmsLengthOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var exitedThirdPartyOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var opportunitiesOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			
+			var allFeatures = getLinearJSONFeatures(data);
+			for(var i = 0; i < allFeatures.length; i++) {
+				switch(allFeatures[i].properties.status_id) {
+					case 2: ownedOfferData["features"].push(allFeatures[i]); break;
+					case 4: expiredOfferData["features"].push(allFeatures[i]); break;
+					case 5: pendingOfferData["features"].push(allFeatures[i]); break;
+					case 1: case 6: acceptedOfferData["features"].push(allFeatures[i]); break;
+					case 13: escrowCancellationOfferData["features"].push(allFeatures[i]); break;
+					case 9: exitedNonArmsLengthOfferData["features"].push(allFeatures[i]); break;
+					case 21: exitedThirdPartyOfferData["features"].push(allFeatures[i]); break;
+					case 22: opportunitiesOfferData["features"].push(allFeatures[i]); break;
+				}
+			}
+			
+			geojsonLayerOffersOwned.clearLayers();
+			geojsonLayerOffersOwned.addData(ownedOfferData);
+			geojsonLayerOffersExpired.clearLayers();
+			geojsonLayerOffersExpired.addData(expiredOfferData);
+			geojsonLayerOffersPending.clearLayers();
+			geojsonLayerOffersPending.addData(pendingOfferData);
+			geojsonLayerOffersAccepted.clearLayers();
+			geojsonLayerOffersAccepted.addData(acceptedOfferData);
+			geojsonLayerOffersEscrowCancellation.clearLayers();
+			geojsonLayerOffersEscrowCancellation.addData(escrowCancellationOfferData);
+			geojsonLayerOffersExitedNonArmsLength.clearLayers();
+			geojsonLayerOffersExitedNonArmsLength.addData(exitedNonArmsLengthOfferData);
+			geojsonLayerOffersExitedThirdParty.clearLayers();
+			geojsonLayerOffersExitedThirdParty.addData(exitedThirdPartyOfferData);
+			geojsonLayerOffersOpportunities.clearLayers();
+			geojsonLayerOffersOpportunities.addData(opportunitiesOfferData);
+			reorderLayers();
+			
+			//re-order to make sure the Selected Layer is at the top
+			geojsonLayerOffersOwned.bringToBack();
+			geojsonLayerOffersExpired.bringToBack();
+			geojsonLayerOffersPending.bringToBack();
+			geojsonLayerOffersAccepted.bringToBack();
+			geojsonLayerOffersEscrowCancellation.bringToBack();
+			geojsonLayerOffersExitedNonArmsLength.bringToBack();
+			geojsonLayerOffersExitedThirdParty.bringToBack();
+			geojsonLayerOffersOpportunities.bringToBack();
+			geojsonLayerParcel.bringToBack();
+			geojsonLayerCounties.bringToBack();
+			keepOpacity();
+		});
+
+	} else {
+   		MapLayerControl.removeFolder('Offers');
+   		map.removeLayer(geojsonLayerOffersOwned);
+   		map.removeLayer(geojsonLayerOffersExpired);
+   		map.removeLayer(geojsonLayerOffersPending);
+   		map.removeLayer(geojsonLayerOffersAccepted);
+   		map.removeLayer(geojsonLayerOffersEscrowCancellation);
+   		map.removeLayer(geojsonLayerOffersExitedNonArmsLength);
+   		map.removeLayer(geojsonLayerOffersExitedThirdParty);
+   		map.removeLayer(geojsonLayerOffersOpportunities);
+
+		$.getJSON(jsonurloffer + "&bbox=" + getBoundingBox(), function(data) {
+			var onEachOfferFeature = function (feature, layer) {
+				/* format projects link based on pro_desc field populated via the sync service.... format in filed is as follows:
+				{project key 1};{Project Description 1},{project key 2};{Project Description 2}
+				*/
+				var ProjectsArray = feature.properties.proj_desc.split(",");
+				var ProjectsLinkString = "";
+				for (var i = 0; i < ProjectsArray.length; i++) {
+					var ProjectsIndPartsArray = ProjectsArray[i].split(";");
+					if (ProjectsIndPartsArray.length === 2) {
+						ProjectsLinkString += '<br/><a href="http://cgss01/SitePages/ProjectDetails.aspx?ProjectKey=' + ProjectsIndPartsArray[0] + '" target="_blank">' + ProjectsIndPartsArray[1] + /*' ( ' + ProjectsIndPartsArray[0] +*/ '</a>';
+					}
+				}
+				var pin = feature.properties.pin;
+				// this will calculate the avg of set of coordinates to estimate the center of the selected parcel(polygon)
+				var totalLong = 0;
+				var totalLat = 0;
+				for(var i = 0; i < feature.geometry.coordinates[0][0].length ; i++)
+				{
+					totalLong += feature.geometry.coordinates[0][0][i][0];
+					totalLat += feature.geometry.coordinates[0][0][i][1];
+				}
+				centerLong = totalLong/feature.geometry.coordinates[0][0].length;
+				centerLat = totalLat/feature.geometry.coordinates[0][0].length; 
+			
+				layer.bindPopup(//"<b>Seller: </b> " + feature.properties.owner_name
+				/*+*/ "<b>PID: </b> " + feature.properties.prid_list
+				//+ " ( " + feature.properties.nickname + " )"
+				+ "<b>Acres: </b> " + feature.properties.acres
+				+ "<b>Project(s): </b>" + ProjectsLinkString
+				+ '<hr/><div class="osis-map-popup-toolbar">'
+				+ '<a title="Show In Google Maps" href="#" '
+				+ 'onclick="showGoogleParcel(' + "'" + feature.properties.gid + "')" + '"><i class="fa fa-user fa-3x"></i></a>'
+				+ '<a title="Show Information" href="#"'
+				+ 'onclick="showOfferInformation(\'' + feature.properties.pin + '\',' + feature.properties.region_id + ')"><i class="fa fa-info-circle fa-3x"></i></a>'
+				/* Creates a link to run the myRoute fucntion by passing in users current Lat and Lon */
+				+ '<a title="Route" href="#"'
+				+ 'onclick="myRoute(' + "'" + feature.properties.gid + "'," + centerLong + "," + centerLat + ")" + '"><i class="fa fa-share-square fa-3x"></i></a>'
+				+ '<a title="Navigate" href="#" '
+				+ 'onclick="nav(' + "'" + feature.properties.gid + "'," + centerLong + "," + centerLat + ")" + '"><i class="fa fa-caret-right fa-3x"></i></a>'					/* + '<a title="Show Directions To This Property" href="#"'
+				+ 'onclick="showGoogleDirections(\'' + feature.properties.gid + '\')"><i class="fa fa-location-arrow fa-3x"></i></a>' */
+				+ '</div>' ).on('click', function (e) { /* console.log(e); */ to = e.latlng; });
+				layer.on("mouseover", function (e) {
+					switch (feature.properties.status_id) {
+						case 2: this.setStyle(styleahover); break;
+						case 4: this.setStyle(stylebhover); break;
+						case 5: this.setStyle(stylechover); break;
+						case 1: case 6: this.setStyle(styledhover); break;
+						case 13: this.setStyle(styleehover); break;
+						case 9: this.setStyle(stylefhover); break;
+						case 21: this.setStyle(styleghover); break;
+						case 22: this.setStyle(stylehhover); break;
+						default: return {color: "#e5e5e5", opacity: .65, weight: 1};
+					}
+				});
+				layer.on("mouseout", function (e) {
+					switch (feature.properties.status_id) {
+						case 2: layer.setStyle(stylea); break;
+						case 4: layer.setStyle(styleb); break;
+						case 5: layer.setStyle(stylec); break;
+						case 1: case 6: layer.setStyle(styled); break;
+						case 13: layer.setStyle(stylee); break;
+						case 9: this.setStyle(stylef); break;
+						case 21: this.setStyle(styleg); break;
+						case 22: this.setStyle(styleh); break;
+						default: return {color: "#e5e5e5", opacity: .65, weight: 1};
+					}
+				});
+				layer.on("click", function (e) {
+					if (feature.properties.status_id < 200)
+						feature.properties.status_id += 200;
+					//layer.setStyle(styleclickparcel);
+					feature.properties.id = feature.properties.region_id + ":" + feature.properties.pin;
+					addToOfferSelection(feature.properties);
+					mysellayer = L.GeoJSON.geometryToLayer(layer.feature).setStyle(styleclickparcel);
+					SelectedOffersLayers.push(mysellayer);
+					mysellayer.on("contextmenu", function (e) {
+						map.removeLayer(this);
+						removeOfferSelection(feature.properties);
+						map.closePopup();
+					});
+					mysellayer = map.addLayer(mysellayer);
+
+				});
+				layer.on("contextmenu", function (e) {
+					
+					//layer.setStyle(styleclickparcel);
+					feature.properties.id = feature.properties.region_id + ":" + feature.properties.pin;
+					addToOfferSelection(layer.feature.properties);
+					mysellayer = L.GeoJSON.geometryToLayer(layer.feature).setStyle(styleclickparcel);
+					SelectedOffersLayers.push(mysellayer);
+					mysellayer.on("contextmenu", function (e) {
+						map.removeLayer(this);
+						removeOfferSelection(layer.feature.properties);
+						map.closePopup();
+					});
+					mysellayer = map.addLayer(mysellayer);
+					
+					
+				});
+			};
+			
+			//Break offers out into different GeoJSON objects based on status_id
+			var ownedOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var expiredOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var pendingOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var acceptedOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var escrowCancellationOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var exitedNonArmsLengthOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var exitedThirdPartyOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			var opportunitiesOfferData = {"type": "FeatureCollection", "crs": data.crs, "features": []};
+			
+			var allFeatures = getLinearJSONFeatures(data);
+			for(var i = 0; i < allFeatures.length; i++) {
+				switch(allFeatures[i].properties.status_id) {
+					case 2: ownedOfferData["features"].push(allFeatures[i]); break;
+					case 4: expiredOfferData["features"].push(allFeatures[i]); break;
+					case 5: pendingOfferData["features"].push(allFeatures[i]); break;
+					case 1: case 6: acceptedOfferData["features"].push(allFeatures[i]); break;
+					case 13: escrowCancellationOfferData["features"].push(allFeatures[i]); break;
+					case 9: exitedNonArmsLengthOfferData["features"].push(allFeatures[i]); break;
+					case 21: exitedThirdPartyOfferData["features"].push(allFeatures[i]); break;
+					case 22: opportunitiesOfferData["features"].push(allFeatures[i]); break;
+				}
+			}
+			
+			geojsonLayerOffersOwned = new L.geoJson(ownedOfferData,{
+				style: stylea, onEachFeature: onEachOfferFeature
+			});
+			geojsonLayerOffersExpired = new L.geoJson(expiredOfferData,{
+				style: styleb, onEachFeature: onEachOfferFeature
+			});
+			geojsonLayerOffersPending = new L.geoJson(pendingOfferData,{
+				style: stylec, onEachFeature: onEachOfferFeature
+			});
+			geojsonLayerOffersAccepted = new L.geoJson(acceptedOfferData,{
+				style: styled, onEachFeature: onEachOfferFeature
+			});
+			geojsonLayerOffersEscrowCancellation = new L.geoJson(escrowCancellationOfferData,{
+				style: stylee, onEachFeature: onEachOfferFeature
+			});
+			geojsonLayerOffersExitedNonArmsLength = new L.geoJson(exitedNonArmsLengthOfferData,{
+				style: stylef, onEachFeature: onEachOfferFeature
+			});
+			geojsonLayerOffersExitedThirdParty = new L.geoJson(exitedThirdPartyOfferData,{
+				style: styleg, onEachFeature: onEachOfferFeature
+			});
+			geojsonLayerOffersOpportunities = new L.geoJson(opportunitiesOfferData,{
+				style: styleh, onEachFeature: onEachOfferFeature
+			});
+			
+			map.addLayer(geojsonLayerOffersOwned);
+			map.addLayer(geojsonLayerOffersExpired);
+			map.addLayer(geojsonLayerOffersPending);
+			map.addLayer(geojsonLayerOffersAccepted);
+			map.addLayer(geojsonLayerOffersEscrowCancellation);
+			map.addLayer(geojsonLayerOffersExitedNonArmsLength);
+			map.addLayer(geojsonLayerOffersExitedThirdParty);
+			map.addLayer(geojsonLayerOffersOpportunities);
+			
+			var offerFolderTitle = 'Offers <div id="Offers" style="display: inline-block"><a href="#" onClick ="opacitySlider(&apos;Offers&apos;)">Edit</a></div>';
+			
+			MapLayerControl.addOverlay(geojsonLayerOffersOwned, '<span class="o_swatch o_swatch_stylea"></span>Owned', offerFolderTitle);
+			MapLayerControl.addOverlay(geojsonLayerOffersExpired, '<span class="o_swatch o_swatch_styleb"></span>Expired', offerFolderTitle);
+			MapLayerControl.addOverlay(geojsonLayerOffersPending, '<span class="o_swatch o_swatch_stylec"></span>Pending', offerFolderTitle);
+			MapLayerControl.addOverlay(geojsonLayerOffersAccepted, '<span class="o_swatch o_swatch_styled"></span>Accepted/Escrow', offerFolderTitle);
+			MapLayerControl.addOverlay(geojsonLayerOffersEscrowCancellation, '<span class="o_swatch o_swatch_stylee"></span>Escrow Cancellation', offerFolderTitle);
+			MapLayerControl.addOverlay(geojsonLayerOffersExitedNonArmsLength, '<span class="o_swatch o_swatch_stylef"></span>Exited Non-Arms Length', offerFolderTitle);
+			MapLayerControl.addOverlay(geojsonLayerOffersExitedThirdParty, '<span class="o_swatch o_swatch_styleg"></span>Exited Third Party', offerFolderTitle);
+			MapLayerControl.addOverlay(geojsonLayerOffersOpportunities, '<span class="o_swatch o_swatch_styleh"></span>Opportunities', offerFolderTitle);
+			
+			reorderLayers();
+		});
+
+		OffersInitAdd = true;
+		
+	}
+	keepOpacity();
+}
+
+/* Function to render the route*/
+function myRoute(parcelident, tolon, tolat) {
+	if (route == null)
+	{
+		initializeRoute(); // initializing route;
+	}
+	else{
+		route.spliceWaypoints(0, 2); // removing the old route
+	}	
+	route.getPlan().setWaypoints([L.latLng(myLat, myLong),L.latLng(tolat, tolon)]);
+	/* Adds the route to the map */
+	route.addTo(map);
+};
+
+function initializeRoute(){
+	route = L.Routing.control();
+};
+
+/* Runs when the document first loads to get user's current latitude and longitude */
+function showMyLocation() {
+	navigator.geolocation.getCurrentPosition(showPosition);	
+};
+
+function showPosition(mylocation) {
+    console.log(mylocation);
+    console.log(mylocation.coords.latitude);
+    console.log(mylocation.coords.longitude);
+    setLatLong(mylocation.coords.latitude, mylocation.coords.longitude);
+};
+
+function setLatLong(inputLat, inputLong){
+	myLat = inputLat;
+	myLong = inputLong;
+};

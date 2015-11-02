@@ -1,0 +1,130 @@
+O/* Created two global arrays */
+
+var SelectedRadiusPINs = [];
+var SelectedRadiusPINsLayers = [];
+
+/* Creates new geojson */
+var geojsonRadiusSelection = new L.geoJson();
+
+/* Stylizes the selected Parcels of Land */
+var styleselectedparcel = {
+   color: "#d61111", opacity: 1,
+   weight: 6,
+   fillOpacity: 0.4,
+   zIndex: 1000
+};
+
+/* Çircle tool is selected and a radius is drawn an ajax request is sent to retrieve any parcels within that radius */
+map.on('draw:created', function (e) { 
+		var type = e.layerType, 
+		layer = e.layer;  
+		if (type === 'marker') {
+			var latLon = layer.getLatLng();
+			//toFixed(3) allows only three decimal places
+			layer.bindPopup('<strong>Latitude:</strong> ' + latLon.lat.toFixed(3) + "<br/><strong>Longitude:</strong> " + latLon.lng.toFixed(3));
+		}
+		//Select Parcels Using Radius Draw Function
+		
+		if (type === 'circle') {
+			/* Changes the radius from metres to miles */
+			var radiusMetresToMiles = (layer.getRadius()*0.000621371);
+			var circleGeojson = layer.toGeoJSON();
+			var longitude = circleGeojson.geometry.coordinates[0];
+			var latitude = circleGeojson.geometry.coordinates[1];
+			/* Gets the user's current bounding box */
+			var boundingBox = map.getBounds();
+
+			$.ajax({
+	            type:'GET',
+	            url: 'o_custom/maps/radius_search.cfc',
+	            data: {method: 'getParcelsWithinCircle',  lat:latitude, lon:longitude, r:radiusMetresToMiles, neLon:boundingBox._northEast.lng, neLat:boundingBox._northEast.lat, swLon:boundingBox._southWest.lng, swLat:boundingBox._southWest.lat},
+	            success: function(data) {
+	                var radiusSelection = $.parseJSON(data);
+	                geojsonRadiusSelection = new L.geoJson(radiusSelection,{ style: styleselectedparcel ,
+	    				onEachFeature: function (feature, layer) {
+	    					addToRadiusPINSelection(layer.feature.id);
+	    				}});
+	    			/* Adds the Radius Selection to the map */
+	    			map.addLayer(geojsonRadiusSelection);
+	    			geojsonRadiusSelection.bringToBack();
+	              }
+			});
+		}
+		
+		drawnItems.addLayer(layer);
+	});
+	
+	
+/* Functions to process the radius PIN's */
+
+function addToRadiusPINSelection(e) {
+	
+	if (SelectedRadiusPINs.length === 0) osisinfocontrol.addTo(map);
+	SelectedRadiusPINs.push(e);
+	renderRadiusPINSelected();
+
+};
+
+/* When the clear button is pressed the current array is cleared of all information, de-selects the PIN's */
+function clearRadiusPINSelection(e) {
+	
+	var sellyrsarray = SelectedRadiusPINsLayers;
+	
+	for (var k=0;k<sellyrsarray.length;k++) {
+		map.removeLayer(sellyrsarray[k]);
+	}
+	map.removeLayer(geojsonRadiusSelection);
+	SelectedRadiusPINs = [];
+	osisinfocontrol.removeFrom(map);
+	
+}
+
+/* Function creates the list of selected PIN's */
+
+function renderRadiusPINSelected() {
+
+	var SelectedHTML = '<h4 class="o_map_selectedpins_header">Selected PINs</h4>';
+	SelectedHTML += '<button onclick="showSelectedRadiusPINsInformation()">Info</button>';
+	SelectedHTML += '<button onclick="clearRadiusPINSelection()">Clear</button>';
+
+	SelectedHTML += '<ul class="o_map_pinselectlist">';
+
+	for (var i = 0; i < SelectedRadiusPINs.length; i++) {
+			/* Shows only 10 PIN's in Preview, if there are more the popup will show 10 and more */
+			if ( SelectedRadiusPINs.length > 10 & i === 10) {
+				SelectedHTML += "<li>... and " + (SelectedRadiusPINs.length - 10) + " more</li>";
+			} else if (i <= 10) {
+				SelectedHTML += '<li>' + SelectedRadiusPINs[i] + '</li>';
+			}
+			
+		}
+	/* Adds the 'SelectedHTML' variables to the o_map_selectionpins */
+   	$("#o_map_selectedpins").html(SelectedHTML);
+
+   	SelectedHTML = '</ul>';
+	
+}
+
+function showSelectedRadiusPINsInformation() {
+
+	var PINSArray = new Array();
+	var RegionsArray = new Array();
+
+	for (var i = 0; i < SelectedRadiusPINs.length; i++) {
+
+		PINSArray.push(SelectedRadiusPINs[i].split(":")[1]);===
+		RegionsArray.push(SelectedRadiusPINs[i].split(":")[0]);
+
+	}
+
+if (PINSArray.length >= 1) showRadiusPinInformation(PINSArray.toString(),RegionsArray.toString());
+
+}
+
+/* Passes in the PIN id and Region ID and filters report based on radius selection */
+
+function showRadiusPinInformation(PINToShow, RegionToShow) {
+
+   showReportInformation(PINToShow, RegionToShow, 334, 1475);
+
+};
