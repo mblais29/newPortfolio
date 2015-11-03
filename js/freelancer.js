@@ -43,3 +43,7 @@ $('img#profile').mouseover(
   }).mouseleave(function(){
      $(this).attr("src", "img/profile-colour.jpg");
 });
+// Shows loading gif while website loads
+$(window).load(function() {
+     $('#loading').hide();
+  });
