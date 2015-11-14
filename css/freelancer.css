@@ -36,6 +36,18 @@ p.small {
     font-size: 16px;
 }
 
+.inline{
+	display: inline-block;
+}
+
+.fa-github-square, .fa-linkedin-square{
+	color: #B09378;
+}
+
+.fa-github-square:hover, .fa-linkedin-square:hover{
+	color: #FFFFFF;
+}
+
 a,
 a:hover,
 a:focus,

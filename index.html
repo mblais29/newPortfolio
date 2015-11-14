@@ -21,8 +21,7 @@
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link rel="icon" type="image/png" href="favicon.ico">
-
+	<link rel="icon" type="image/png" href="favicon.ico">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -82,7 +81,9 @@
                     <div class="intro-text">
                         <span class="name">Mitchel Blais</span>
                         <hr class="star-light">
-                        <span class="skills">Web Applications Developer</span>
+                        <span class="skills">Web Applications Developer</span><br/>
+						<div class="inline"><a href="https://github.com/mblais29" target="_blank"><i class="fa fa-github-square fa-3x"></i></a></div>
+						<div class="inline"><a href="https://uk.linkedin.com/pub/mitchel-blais/52/621/6b0" target="_blank"><i class="fa fa-linkedin-square fa-3x"></i></a></div>
                     </div>
                 </div>
             </div>
@@ -163,6 +164,16 @@
                         <img src="img/portfolio/angularform.png" class="img-responsive" alt="">
                     </a>
                 </div>
+				<div class="col-sm-4 portfolio-item">
+                    <a href="#portfolioModal7" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="img/portfolio/Grid_List_Layout.png" class="img-responsive" alt="">
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -178,7 +189,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <p>Hello, I'm Mitchel Blais this is my personal website where I share all of my work. I have a background in GIS and had the opportunity to combine GIS with Web Application Systems. As such, my current projects are heavily influenced by spatial analysis and the web. With my current skill set and knowledge, I developed an Oil and Gas Spatial Application System outlining all the Oil and Gas wells that have been drilled throughout British Columbia and Saskatchewan, Canada. My Web Application can be viewed <a href="http://mblais-welldata.ca/wellKnown/" target="_blank" >here</a>. In addition, I have a <a href="https://github.com/mblais29" target="_blank">github</a> account showcasing my Front End Development Skills. </p>
+                    <p>Hello, I'm Mitchel Blais and welcome to my personal website where I share all of my work. I recently moved to the United Kingdom from Canada for a change of scenery and to gain some international experience. I am looking for contract work where I can use my diverse skill set and challenge myself while learning new technologies. Professionally, I have been employed with BRG Workplace Solutions as a Web Applications Developer for the past two years and in my spare time I enjoy developing new applications with a broad range of technologies.<br/>When I am not working at my computer I enjoy playing Football, American Football and travelling with my wife. I am always eager to take on new freelance projects and would love here from you and find out how I can address your web development needs.</p>
                 </div>
             </div>
         </div>
@@ -450,6 +461,10 @@
                                     <strong><a href="https://github.com/mblais29/wellKnown" target="_blank">Preview Code</a>
                                     </strong>
                                 </li>
+								<li>Website:
+                                    <strong><a href="http://mblais-welldata.ca/wellKnown/" target="_blank">Well Known</a>
+                                    </strong>
+                                </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         </div>
@@ -491,6 +506,10 @@
                                     <strong><a href="https://github.com/mblais29/form" target="_blank">Preview Code</a>
                                     </strong>
                                 </li>
+								<li>Website:
+                                    <strong><a href="http://mblais.ca/form" target="_blank">Live Preview</a>
+                                    </strong>
+                                </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         </div>
@@ -530,6 +549,55 @@
                                 </li>
                                 <li>Code:
                                     <strong><a href="https://github.com/mblais29/ang-form" target="_blank">Preview Code</a>
+                                    </strong>
+                                </li>
+								<li>Website:
+                                    <strong><a href="http://mblais.ca/ang-form" target="_blank">Live Preview</a>
+                                    </strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="portfolio-modal modal fade" id="portfolioModal7" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Angular Grid/List Layout</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/Grid_List_Layout.png" class="img-responsive img-centered map" alt="">
+                            <p>The Angular Grid/List Layout was created to gain a better understanding of <b><i>Angular.js</i></b> Framework. JQuery, font-awesome and Twitter Bootstrap were all used together to complete the website. The website loads as a Grid Layout <span class="fa fa-th-large"></span>, however, the user has the ability to view the page as a List Layout by selecting the <span class="fa fa-list"></span> Image. Additionally, they can insert a new record by selecting the 'Add' Button. Once the information is complete, the user hit's submit and adds a new record to the <b><i>JSON</i></b> Array. Currently, the user input is stored locally, once the page is refreshed the record will no longer exist. </p>
+                            <ul class="list-inline item-details">
+                                <li>Client:
+                                    <strong><span>Personal Application</span>
+                                    </strong>
+                                </li>
+                                <li>Date:
+                                    <strong><span>November 2015</span>
+                                    </strong>
+                                </li>
+                                <li>Service:
+                                    <strong><span>Web Development</span>
+                                    </strong>
+                                </li>
+                                <li>Code:
+                                    <strong><a href="https://github.com/mblais29/grid" target="_blank">Preview Code</a>
+                                    </strong>
+                                </li>
+								<li>Website:
+                                    <strong><a href="http://mblais.ca/grid" target="_blank">Live Preview</a>
                                     </strong>
                                 </li>
                             </ul>
